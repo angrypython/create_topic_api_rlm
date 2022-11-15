@@ -1,17 +1,18 @@
 import requests
 import urllib3
 import argparse
-import datetime
+#import datetime
 def get_params_run():
-    
     mainparser = argparse.ArgumentParser(description="For create topics")
     subparsers = mainparser.add_subparsers(title='subcommands', description='valid subcommands', help='description')
 
     head = subparsers.add_parser("head", description="Heads")
     head.add_argument("-url", dest="url", default='https://rlm.sigma.ru')
-    head.add_argument("-token", dest="token", default='token')
-    
-    param = subparsers.add_parser("parser", description="Parser")
+    head.add_argument("-authorization", dest="Authorization", default='token')
+    head.add_argument("-accept", dest="accept", default='application/json')
+    head.add_argument("-content_type", dest="Content-Type", default='application/json')
+
+    param = subparsers.add_parser("param", description="Param")
     param.add_argument("-action", dest="action", default='aktag_create_topic')
     param.add_argument("-ak_topic", dest="ak_topic", default='test2api')
     param.add_argument("-ak_replication_factor", dest="ak_replication_factor", default='1')
@@ -32,14 +33,23 @@ def get_params_run():
 
     return [heads, params, items]
 
-def post_to_api(url, head,  param):
+def post_to_api(all):
+    heads = all[0]
+    if heads['Authorization'] == 'token':
+        heads['Authorization'] = input('enter your token: ')
+    body = {}
+    body['params'] = all[1]
+    body['items'] = all[2]
     urllib3.disable_warnings()
-    r = requests.post ( url, headers=head, param=param)
-    if str(r.status_code) == '200':
-        print('sucsses')
-    else:
-        print('fail')
+    #print(heads.pop('url'))
+    #print(heads)
+    #print(body)
+    r = requests.post(url=heads.pop('url'), headers=heads, data=body)
+    #if str(r.status_code) == '200':
+    #    print('sucsses')
+    #else:
+    #    print('fail')
 
 if __name__ == '__main__':
-    print(get_params_run())
-    #post_to_api(param1, param2, get_params_run())
+    #print(get_params_run())
+    post_to_api(get_params_run())
