@@ -1,0 +1,25 @@
+{
+ "params": {
+    "action": "aktag_create_topic,aktag_modify_topic",
+    "ak_topic": "test1api",
+    "ak_replication_factor": 1,
+    "ak_partitions": 1,
+    "ak_security": "SSL",
+    "ak_port": 9093,
+    "ak_topic_config": [],
+    "user_email": "user@example.com",
+    "env_type": "TEST"
+  },
+  "start_at": "now",
+  "service": "createtopicKafka",
+  "datetime": "2022-11-15T07:25:20.488Z",
+  "items": [
+    {
+      "invsvm_ci_svm": "CI04340141",      
+      "invsvm_ip": "10.56.165.201"
+    }
+  ]
+}
+Authorization	Token kjsdbvjkdnvjk
+accept	application/json
+Content-Type	application/json
