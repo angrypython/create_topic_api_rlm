@@ -1,23 +1,24 @@
+#!/bin/python3
 import requests
 import urllib3
 import argparse
-import json
 #import datetime
+import json
 def get_params_run():
     mainparser = argparse.ArgumentParser(description="For create topics")
     subparsers = mainparser.add_subparsers(title='subcommands', description='valid subcommands', help='description')
 
     head = subparsers.add_parser("head", description="Heads")
-    head.add_argument("-url", dest="url", default='https://rlm.delta.sbrf.ru')
-    head.add_argument("-authorization", dest="Authorization", default='token')
+    head.add_argument("-url", dest="url", default='https://rlm.delta.sbrf.ru/api/tasks/')
+    head.add_argument("-authorization", dest="Authorization", default='Token 8ecf4351b8926bca001cc7453618c52443968bfaea3ae4ef755583b48f973989')
     head.add_argument("-accept", dest="accept", default='application/json')
     head.add_argument("-content_type", dest="Content-Type", default='application/json')
 
     param = subparsers.add_parser("param", description="Param")
-    param.add_argument("-action", dest="action", default='aktag_create_topic')
-    param.add_argument("-ak_topic", dest="ak_topic", default='test2api')
-    param.add_argument("-ak_replication_factor", dest="ak_replication_factor", type=int, default='1')
-    param.add_argument("-ak_partitions", dest="ak_partitions", type=int, default='1')
+    param.add_argument("-action", dest="action", default='aktag_create_topic,aktag_modify_topic')
+    param.add_argument("-ak_topic", dest="ak_topic", default='test4api')
+    param.add_argument("-ak_replication_factor", dest="ak_replication_factor", type=int, default=1)
+    param.add_argument("-ak_partitions", dest="ak_partitions", type=int, default=1)
     param.add_argument("-ak_security", dest="ak_security", default='SSL')
     param.add_argument("-ak_port", dest="ak_port", type=int, default='9093')
     param.add_argument("-ak_topic_config", dest="ak_topic_config", default=[])
@@ -46,19 +47,16 @@ def post_to_api(all):
         heads['Authorization'] = input('enter your token: ')
     body = {}
     body['params'] = all[1]
-    body= {**body, **all[2]}
+    body = {**body, **all[2]}
     buff = []
     buff.append(all[3])
     body['items'] = buff
     urllib3.disable_warnings()
     json_object = json.dumps(body, indent=4)
-    r = requests.post(url=heads.pop('url'), headers=heads, json=json_object, verify=False)
-    print(r)
-    #if str(r.status_code) == '200':
-    #    print('sucsses')
-    #else:
-    #    print('fail')
+    r = requests.post(url=heads.pop('url'), headers=heads, data=json_object, verify=False)
+    print(r.status_code)
+    print(r.content)
+    #print(json_object)
 
 if __name__ == '__main__':
-    #print(get_params_run())
     post_to_api(get_params_run())
